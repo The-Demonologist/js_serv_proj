@@ -3,55 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Wordle Clone</title>
     <link rel="stylesheet" href="./styles/styles.css"/>
 </head>
 <body>
-    <h1 class="test">Wordle Clone</h1>
-</body>
-    <label for="user-input">Guess:</label>
-    <input id="user-input" class="user-input"/>
-    <div class="guess-group">
-        <div class="guess">
-            Guess 1:
-            <div class="let"> </div>
-            <div class="let"> </div>
-            <div class="let"> </div>
-            <div class="let"> </div>
-            <div class="let"> </div>
-        </div>
-        <div class="guess">
-            Guess 2:
-            <div class="let"> </div>
-            <div class="let"> </div>
-            <div class="let"> </div>
-            <div class="let"> </div>
-            <div class="let"> </div>
-        </div>
-        <div class="guess">
-            Guess 3:
-            <div class="let"> </div>
-            <div class="let"> </div>
-            <div class="let"> </div>
-            <div class="let"> </div>
-            <div class="let"> </div>
-        </div>
-        <div class="guess">
-            Guess 4:
-            <div class="let"> </div>
-            <div class="let"> </div>
-            <div class="let"> </div>
-            <div class="let"> </div>
-            <div class="let"> </div>
-        </div>
-        <div class="guess">
-            Guess 5:
-            <div class="let"> </div>
-            <div class="let"> </div>
-            <div class="let"> </div>
-            <div class="let"> </div>
-            <div class="let"> </div>
+    <h1 class="title">Wordle Clone</h1>
+    <div class="wrapper">
+        <input type="text" id="user-input" class="user-input" placeholder="Guess the word!" maxlength="5"/>
+        <div class="error"></div>
+        <div class="guess-group">
+
         </div>
     </div>
+</body>
 <script src="./src/app.js"></script>
 </html>
