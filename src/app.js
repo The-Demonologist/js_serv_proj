@@ -4,15 +4,15 @@ const VALID_URL = "https://words.dev-apis.com/validate-word";
 
 const errorDiv = document.createElement("div");
 const errorMsg = document.createTextNode("Input is invalid please input a valid word!");
-errorDiv.appendChild(errorMsg);
+const errorCont = document.createTextNode("Can't Guess the same word!");
 errorDiv.className="error-msg";
 
-const guessDiv = document.createElement("div");
-const letterDiv = document.createElement("div");
 
+let prevWords = [];
 
 let word = '';
 let guessCount = 0;
+let correct = false;
 
 //api request to fetch daily word with GET
 async function fetchDailyWord() {
@@ -39,49 +39,85 @@ async function validateWord(value){
     if (process_valid.validWord == false){
         return false;
     } else {
+        prevWords.push(value);
         return true;
     }
+
 }
 
 
 //manage guess count if at or below 6 guesses then guess. If above 6 attempts/guesses print there are too many guesses.
 async function manageGuess(value){
-    guessCount = guessCount + 1;
 
-    if (guessCount <= 6){
-        if(await validateWord(value) == true){
+    if(correct == true) {
 
-            //remove error message from screen
-            if(document.querySelector('.error').hasChildNodes == true){
-                document.querySelector('.error').removeChild(document.querySelector('.error').firstChild);
-            };
-
-            //output guess to div
-            guessToDiv(value);
-
-            //reset input field if input valid
-            render();
-
-        } else {
-            guessCount = guessCount - 1;
-            let el = document.querySelector('.error');
-            el.appendChild(errorDiv);
-        };
     } else {
-        console.log('too many guesses you lose!');
-    };
+        guessCount = guessCount + 1;
+
+        //remove error message from screen
+        msg = document.querySelector('.error-msg')
+        if(msg){
+            msg.innerText = '';
+            msg.parentNode.removeChild(msg)
+        }
+        
+        if (guessCount <= 6){
+            if  (prevWords.includes(value) == true) {
+                guessCount = guessCount - 1;
+
+                errorDiv.appendChild(errorCont);
+                let el = document.querySelector('.error');
+                el.appendChild(errorDiv);
+
+            }else if(await validateWord(value) == true){
+
+                //output guess to div
+                guessToDiv(value);
+
+                if (value == word){
+                    correct = true;
+                }
+                //reset input field if input valid
+                render();
+
+            } else {
+                guessCount = guessCount - 1;
+                errorDiv.appendChild(errorMsg);
+                let el = document.querySelector('.error');
+                el.appendChild(errorDiv);
+            };
+        } else {
+            console.log('too many guesses you lose!');
+        };
+    }
 }
 
 
 function guessToDiv(value) {
     let arrLetters = [...value];
     let corrWordLet = [...word];
+    const guessDiv = document.createElement("div");
+    guessDiv.className = "guess-lets"
+
     
-    arrLetters.forEach( x => {
-        if(corrWordLet.includes(x)){
-            console.log('has letter');
+    arrLetters.forEach( (x, i) => {
+        const letterDiv = document.createElement("div");
+        letterDiv.innerText = x;
+        guessDiv.appendChild(letterDiv);
+
+        // if same position, if contains, if everything else.
+        if(x == corrWordLet[i] ) {
+            letterDiv.className="let correct";
+        }else if (corrWordLet.includes(x)){
+            letterDiv.className="let contains";
+        } else {
+            letterDiv.className="let";
         }
+    
     });
+
+    let el = document.querySelector('.guess-group');
+    el.appendChild(guessDiv);
 }
 
 //check if is letter
@@ -98,7 +134,6 @@ function init() {
             .addEventListener("keydown", function (event) {
                 //handle enter
                 if(event.key == "Enter") {
-                    console.log('submit');
                     manageGuess(document.querySelector('.user-input').value);
                 //handle backspace                    
                 } else if(event.key == "Backspace") {
